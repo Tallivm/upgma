@@ -104,10 +104,8 @@ class UPGMA(object):
     def get_largest_branch(self):
         """ Return the branch with more final taxa (not counting OTU's). """
         if self.tree.right is None:
-            #print "No right branch, returning left branch."
             return self.tree.left
         elif self.tree.left is None:
-            #print "No left branch, returning right branch."
             return self.tree.right
 
         elif len(self.tree.right) > len(self.tree.left):
@@ -125,7 +123,6 @@ class UPGMA(object):
             node.update_distances(clusters)
 
         for i in range(len(clusters) - 1):
-            #print 18*"-"
             # Find globally closest pair
             c1, c2 = self._get_closest_pair(clusters)
 
@@ -135,7 +132,6 @@ class UPGMA(object):
             new_node = self._create_OTU(c1, c2)
             clusters.add(new_node)
 
-            #print "Finding nearest neighbor for new cluster"
             new_node.update_distances(clusters)
 
             # Recalculate NN's for each cluster previously having one of the
@@ -161,16 +157,4 @@ class UPGMA(object):
                 c1 = node
                 c2 = node.nn
                 assert c2 is not None
-        #print "Clusters {} and {} closest".format(c1, c2)
         return (c1, c2)
-
-
-if __name__ == '__main__':
-    def simple_diff(o1, o2):
-        """ Return a simple absolute distance between the objects. """
-        return abs(o1 - o2)
-
-    from random import randint
-    random_integers = [randint(0, 200) for i in range(8)]
-    print "Initial clusters: {}".format(random_integers)
-    print UPGMA(random_integers, simple_diff).tree
